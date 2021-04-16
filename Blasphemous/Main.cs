@@ -31,8 +31,8 @@ namespace BlasphemousExtractor
 			// Extract data
 			if (GUI.Button(new Rect(155, Screen.height - 50, 150, 50), status)) {
 				_RendererConfig = Core.NewMapManager;
-				var celdas = _RendererConfig.GetAllRevealedCells();
-				var result = getJson(celdas);
+				var cells = _RendererConfig.GetAllRevealedCells();
+				var result = getJson(cells);
 				
 				GUIUtility.systemCopyBuffer = result; // Save to clipboard
 			}
@@ -45,41 +45,40 @@ namespace BlasphemousExtractor
 			}
 		}
 		
-		private string getJson(List<CellData> celdas) {
-			Dictionary<string, Dictionary<string, string>> dictionary = new Dictionary<string, Dictionary<string, string>>();
-			foreach (CellData cellData in celdas)
+		private string getJson(List<CellData> cells) {
+			Dictionary<string, Dictionary<string, string>> cellDict = new Dictionary<string, Dictionary<string, string>>();
+			foreach (CellData cellData in cells)
 			{
-				string key = cellData.CellKey.X.ToString() + "_" + cellData.CellKey.Y.ToString();
-				string key2 = cellData.ZoneId.GetKey();
-				Dictionary<string, string> dictionary2 = new Dictionary<string, string>();
-				string text = string.Empty;
-				using (List<EditorMapCellData.CellSide>.Enumerator enumerator3 = MapRendererConfig.spriteKeyOrder.GetEnumerator())
+				string cellCoords = cellData.CellKey.X.ToString() + "_" + cellData.CellKey.Y.ToString();
+				string zoneId = cellData.ZoneId.GetKey();
+				Dictionary<string, string> cellDataDict = new Dictionary<string, string>();
+				string spriteName = string.Empty;
+				using (List<EditorMapCellData.CellSide>.Enumerator spriteEnumerator = MapRendererConfig.spriteKeyOrder.GetEnumerator())
 				{
-					while (enumerator3.MoveNext())
+					while (spriteEnumerator.MoveNext())
 					{
-						int num = (int)enumerator3.Current;
-						string str = "_";
-						int num2 = num;
-						if (cellData.Doors[num2])
+						int currentIndex = (int)spriteEnumerator.Current;
+						string cellSideType = "_"; // _ => Empty, W => Wall, D => Door
+						if (cellData.Doors[currentIndex])
 						{
-							str = "D";
+							cellSideType = "D";
 						}
-						else if (cellData.Walls[num2])
+						else if (cellData.Walls[currentIndex])
 						{
-							str = "W";
+							cellSideType = "W";
 						}
-						text += str;
+						spriteName += cellSideType;
 					}
 				}
-				if (!dictionary.ContainsKey(key))
+				if (!cellDict.ContainsKey(cellCoords))
 				{
-					dictionary2.Add("ZoneId", key2);
-					dictionary2.Add("Type", Enum.GetName(typeof(EditorMapCellData.CellType), cellData.Type));
-					dictionary2.Add("Sprite", text);
-					dictionary.Add(key, dictionary2);
+					cellDataDict.Add("ZoneId", zoneId);
+					cellDataDict.Add("Type", Enum.GetName(typeof(EditorMapCellData.CellType), cellData.Type));
+					cellDataDict.Add("Sprite", spriteName);
+					cellDict.Add(cellCoords, cellDataDict);
 				}
 			}
-			return Json.Serialize(dictionary);
+			return Json.Serialize(cellDict);
 		}
 		
 		
