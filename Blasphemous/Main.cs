@@ -37,7 +37,7 @@ namespace BlasphemousExtractor
 				GUIUtility.systemCopyBuffer = result; // Save to clipboard
 			}
 			
-			// Enbale debug console
+			// Enable debug console
 			if (GUI.Button(new Rect(0, Screen.height - 50, 150, 50), "Toggle Console")) {
 				_Console = FindObjectOfType<ConsoleWidget>();
 				consoleStatus = !consoleStatus;
@@ -52,16 +52,6 @@ namespace BlasphemousExtractor
 				string key = cellData.CellKey.X.ToString() + "_" + cellData.CellKey.Y.ToString();
 				string key2 = cellData.ZoneId.GetKey();
 				Dictionary<string, string> dictionary2 = new Dictionary<string, string>();
-				/*foreach (KeyValuePair<string, Color> keyValuePair in BlasHack.ZonesColor)
-				{
-					if (key2.Contains(keyValuePair.Key))
-					{
-						byte b = (byte)(keyValuePair.Value.r * 256f);
-						byte b2 = (byte)(keyValuePair.Value.g * 256f);
-						byte b3 = (byte)(keyValuePair.Value.b * 256f);
-						dictionary2.Add("Color", "#" + b.ToString("X2") + b2.ToString("X2") + b3.ToString("X2"));
-					}
-				}*/
 				string text = string.Empty;
 				using (List<EditorMapCellData.CellSide>.Enumerator enumerator3 = MapRendererConfig.spriteKeyOrder.GetEnumerator())
 				{
