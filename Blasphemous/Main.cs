@@ -18,7 +18,7 @@ namespace BlasphemousExtractor
 		}
 		public void Update()
 		{
-			if (_RendererConfig.Equals(null)) {
+			if (mapManager.Equals(null)) {
 				status = "LOAD DATA";
 			} else {
 				status = "DATA LOADED";
@@ -30,8 +30,8 @@ namespace BlasphemousExtractor
 			
 			// Extract data
 			if (GUI.Button(new Rect(155, Screen.height - 50, 150, 50), status)) {
-				_RendererConfig = Core.NewMapManager;
-				var cells = _RendererConfig.GetAllRevealedCells();
+				mapManager = Core.NewMapManager;
+				var cells = mapManager.GetAllRevealedCells();
 				var result = getJson(cells);
 				
 				GUIUtility.systemCopyBuffer = result; // Save to clipboard
@@ -82,7 +82,7 @@ namespace BlasphemousExtractor
 		}
 		
 		
-		private NewMapManager _RendererConfig;
+		private NewMapManager mapManager;
 		private string status;
 		private bool consoleStatus = false;
 		private ConsoleWidget _Console;
